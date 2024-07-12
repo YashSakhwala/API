@@ -1,8 +1,8 @@
 import 'package:api/config/local_storage.dart';
-import 'package:api/model/home_model.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter/material.dart'; 
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'repository/login_repo.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,18 +15,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => HomeModel()),
-      ],
-      child: MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
-        home: const MyHomePage(title: 'Flutter Demo Home Page'),
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
       ),
+      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
@@ -41,6 +36,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  int counter = 0;
+
   @override
   Widget build(BuildContext context) {
     print("object");
@@ -56,18 +53,16 @@ class _MyHomePageState extends State<MyHomePage> {
             const Text(
               'You have pushed the button this many times:',
             ),
-            Consumer<HomeModel>(builder: (context, data, w) {
-              return Text(
-                '${data.a}',
-                style: Theme.of(context).textTheme.headlineMedium,
-              );
-            })
+            Text(
+              counter.toString(),
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          Provider.of<HomeModel>(context, listen: false).increment();
+          AuthRepo.registerRepo();
         },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
