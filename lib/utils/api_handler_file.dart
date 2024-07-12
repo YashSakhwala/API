@@ -3,6 +3,7 @@ import 'package:api/config/api_endpoint.dart';
 import 'package:api/config/local_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart' as dio;
 
 class HttpHandler {
   static String endPointUrl = APIEndpoints.baseURL;
@@ -28,51 +29,52 @@ class HttpHandler {
     var header = await _getHeaders();
     debugPrint("Post Body ======= $data");
     debugPrint("Post Header ======= $header");
-    final response = await http.post(Uri.parse("$endPointUrl$url"),
-        body: data == null ? null : jsonEncode(data), headers: header);
+
+    final response = await dio.Dio()
+        .post("$endPointUrl$url", data: data, queryParameters: header);
 
     debugPrint("Post data =-= $data");
-    debugPrint("Post body =-= ${response.body}");
+    debugPrint("Post body =-= ${response.data}");
     debugPrint("Post status =-= ${response.statusCode}");
 
     if (response.statusCode == 200) {
       Map<String, dynamic> data = {
-        'body': jsonDecode(response.body),
+        'body': response.data,
         'headers': response.headers,
         'error_description': null,
       };
       return data;
     } else if (response.statusCode == 400) {
       Map<String, dynamic> data = {
-        'body': response.body,
+        'body': response.data,
         'headers': response.headers,
         'error_description': "400",
       };
       return data;
     } else if (response.statusCode == 401) {
       Map<String, dynamic> data = {
-        'body': response.body,
+        'body': response.data,
         'headers': response.headers,
         'error_description': "401",
       };
       return data;
     } else if (response.statusCode == 403) {
       Map<String, dynamic> data = {
-        'body': response.body,
+        'body': response.data,
         'headers': response.headers,
         'error_description': "403",
       };
       return data;
     } else if (response.statusCode == 404) {
       Map<String, dynamic> data = {
-        'body': response.body,
+        'body': response.data,
         'headers': response.headers,
         'error_description': "404",
       };
       return data;
     } else if (response.statusCode == 500) {
       Map<String, dynamic> data = {
-        'body': response.body,
+        'body': response.data,
         'headers': response.headers,
         'error_description': "500",
       };
